@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
                 MultiPartUtility multipart = new MultiPartUtility(requestURL, charset);
                 multipart.addFormField("apikey", apikey);
-                multipart.addFormField("param_name_3", "param_value");
+                multipart.addFormField("language", "tur");
                 multipart.addFilePart("file", new File(path));
                 List<String> response = multipart.finish(); // response from server.
                 for (int i=0;i<response.size();i++){
