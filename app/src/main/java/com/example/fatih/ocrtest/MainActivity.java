@@ -1,5 +1,6 @@
 package com.example.fatih.ocrtest;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -8,14 +9,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int MY_INTENT_CLICK=302;
-    String path="Deneme";
+    private static final int MY_INTENT_CLICK = 302;
+    String path = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void selectImageFromGallery(){
+    public void selectImageFromGallery() {
         Intent intent = new Intent();
         intent.setType("*/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -39,10 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK)
-        {
-            if (requestCode == MY_INTENT_CLICK)
-            {
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == MY_INTENT_CLICK) {
                 if (null == data) return;
 
                 String selectedImagePath;
@@ -53,46 +58,10 @@ public class MainActivity extends AppCompatActivity {
                 path = selectedImagePath;
                 Log.e("Image File Path", path);
 
-                new LongOperation().execute();
+                Intent i = new Intent(MainActivity.this, ImageConfirmation.class);
+                i.putExtra("path", path);
+                startActivity(i);
             }
-        }
-    }
-    private class LongOperation extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            try{
-                Log.e("PATH",path);
-                String charset = "UTF-8";
-                String apikey = "helloworld";
-
-                String requestURL = "https://ocr.a9t9.com/api/Parse/Image";
-
-                MultiPartUtility multipart = new MultiPartUtility(requestURL, charset);
-                multipart.addFormField("apikey", apikey);
-                multipart.addFormField("language", "tur");
-                multipart.addFilePart("file", new File(path));
-                List<String> response = multipart.finish(); // response from server.
-                for (int i=0;i<response.size();i++){
-                    Log.e("SONUC:::",response.get(i));
-                }
-            }catch (Exception e){
-                Log.e("ERROR ON BUILDING URL",e.toString());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            Log.e("###Arkaplan İşlemi##","İşlem Bitti");
-        }
-
-        @Override
-        protected void onPreExecute() {
-            Log.e("###Arkaplan İşlemi##","İşlem Başladı");
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
         }
     }
 }

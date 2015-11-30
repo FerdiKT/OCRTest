@@ -9,6 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.fatih.ocrtest.MainActivity">
 
+
     <Button
         android:id="@+id/select_photo_from_gallery"
         android:layout_width="wrap_content"
